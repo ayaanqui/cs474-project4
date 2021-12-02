@@ -29,21 +29,23 @@ std::vector<std::string> file_contents()
     return data;
 }
 
-std::vector<std::string> parse_args(std::string args)
+std::vector<std::string> *parse_args(std::string args)
 {
-    std::vector<std::string> res;
+    std::vector<std::string> *res = new std::vector<std::string>();
     int space = 0;
     for (size_t i = 0; i < args.length(); ++i)
     {
-        if (args.at(i) == ' ')
+        if (args[i] == ' ')
         {
             std::string arg = args.substr(space, i);
-            res.push_back(arg);
+            res->push_back(arg);
             space = i;
         }
     }
     if (space > 0)
-        res.push_back(args.substr(space + 1));
+        res->push_back(args.substr(space + 1));
+    else
+        res->push_back(args);
     return res;
 }
 
@@ -70,8 +72,7 @@ Expression parse_line(const std::string raw_line)
     if (line.at(line.size() - 1) == '.')
         line = line.substr(0, line.size() - 1);
 
-    std::vector<std::string> args = parse_args(line);
-
+    std::vector<std::string> *args = parse_args(line);
     Expression expression(raw_line, line_number, var, op, args);
     return expression;
 }
@@ -81,7 +82,9 @@ int main()
     std::vector<std::string> file_data = file_contents();
     for (std::string &line : file_data)
     {
-        const Expression expression = parse_line(line);
+        Expression expression = parse_line(line);
+        expression.print();
+        std::cout << std::endl;
     }
     return 0;
 }
