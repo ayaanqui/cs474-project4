@@ -32,20 +32,19 @@ std::vector<std::string> file_contents()
 std::vector<std::string> *parse_args(std::string args)
 {
     std::vector<std::string> *res = new std::vector<std::string>();
-    int space = 0;
-    for (size_t i = 0; i < args.length(); ++i)
+    size_t i = 0;
+    while (i < args.size())
     {
         if (args[i] == ' ')
         {
-            std::string arg = args.substr(space, i);
-            res->push_back(arg);
-            space = i;
+            res->push_back(args.substr(0, i));
+            args = args.substr(i + 1);
+            i = 0;
+            continue;
         }
+        i++;
     }
-    if (space > 0)
-        res->push_back(args.substr(space + 1));
-    else
-        res->push_back(args);
+    res->push_back(args);
     return res;
 }
 
