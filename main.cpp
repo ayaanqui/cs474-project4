@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include "expression.h"
+#include "Expression.h"
 
 /**
  * @brief Reads "pc_input.txt" and returns the contents of this
@@ -33,7 +33,7 @@ std::vector<std::string> parse_args(std::string args)
 {
     std::vector<std::string> res;
     int space = 0;
-    for (int i = 0; i < args.length(); ++i)
+    for (size_t i = 0; i < args.length(); ++i)
     {
         if (args.at(i) == ' ')
         {
