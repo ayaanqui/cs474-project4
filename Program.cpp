@@ -63,6 +63,30 @@ VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_st
 }
 
 /**
+ * @brief Creates a VariableSnapshot object with the new value for the specified variable (w, x, y or z) writing the older values for the rest of the variables.
+ * 
+ * @param var Variable that needs to be assigned a new value
+ * @param value Value that needs to be stored
+ * @param prev_state The latest state
+ * @return VariableSnapshot 
+ */
+VariableSnapshot Program::setValue(char var, double value, VariableSnapshot &prev_state)
+{
+    switch (var)
+    {
+    case 'w':
+        return VariableSnapshot(value, prev_state.x, prev_state.y, prev_state.z);
+    case 'x':
+        return VariableSnapshot(prev_state.w, value, prev_state.y, prev_state.z);
+    case 'y':
+        return VariableSnapshot(prev_state.w, prev_state.x, value, prev_state.z);
+    case 'z':
+        return VariableSnapshot(prev_state.w, prev_state.x, prev_state.y, value);
+    }
+    return VariableSnapshot(0, 0, 0, 0);
+}
+
+/**
  * @brief Loads and parses the data from 'pc_input.txt' file into a vector of Expression
  * 
  * @return std::vector<Expression> 
