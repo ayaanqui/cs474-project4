@@ -14,5 +14,6 @@ public:
     std::string arg2;
     std::string arg3;
     Expression(const std::string expression, const std::string line_number, const std::string var, const std::string assigner, const std::vector<std::string> *args);
+    Expression(Expression *other);
     void print();
 };

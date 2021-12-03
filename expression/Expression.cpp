@@ -19,6 +19,17 @@ Expression::Expression(const std::string expression, const std::string line_numb
     }
 }
 
+Expression::Expression(Expression *other)
+{
+    this->expression = other->expression;
+    this->line_number = other->line_number;
+    this->var = other->var;
+    this->assigner = other->assigner;
+    this->arg1 = other->arg1;
+    this->arg2 = other->arg2;
+    this->arg3 = other->arg3;
+}
+
 void Expression::print()
 {
     std::cout << "Expression: " << this->expression << std::endl;
