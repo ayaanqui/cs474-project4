@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include "Expression.h"
+#include "expression/Expression.h"
 
 /**
  * @brief Reads "pc_input.txt" and returns the contents of this
