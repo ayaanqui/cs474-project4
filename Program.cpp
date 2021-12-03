@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <exception>
+#include <cmath>
 #include "expression/Expression.h"
 #include "variable_snapshot/VariableSnapshot.h"
 #include "Program.h"
@@ -46,20 +48,62 @@ void Program::run()
     {
         VariableSnapshot new_snapshot = this->eval(expression, state_snapshot.back());
         state_snapshot.push_back(new_snapshot);
+
+        new_snapshot.print();
+        std::cout << std::endl;
     }
 }
 
 VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_state)
 {
+    double arg1_value;
     switch (expression.assigner)
     {
     case '=':
-        std::cout << "Assignment operator" << std::endl;
+        if (expression.arg2 == "" || expression.arg3 == "")
+        {
+            // Then arg1 must be a constant value
+            double value = std::stod(expression.arg1);
+            return this->setValue(expression.var, value, prev_state);
+        }
+        // arg1 must be a var, arg3 could be a var or a constant value
+        arg1_value = this->getValue(expression.arg1[0], prev_state);
+
+        // Try to convert arg3 to double otherwise catch because it's a variable and cannot be converted
+        try
+        {
+            double arg3 = std::stod(expression.arg3);
+            double value = this->condense(arg1_value, arg3, expression.arg2);
+            return this->setValue(expression.var, value, prev_state);
+        }
+        catch (std::invalid_argument &e)
+        {
+            // arg3 must be a variable, so get the value first...
+            double arg3_value = this->getValue(expression.arg3[0], prev_state);
+            double value = this->condense(arg1_value, arg3_value, expression.arg2);
+            return this->setValue(expression.var, value, prev_state);
+        }
         break;
     case '?':
         std::cout << "Loop operator" << std::endl;
         break;
     }
+    return VariableSnapshot(0, 0, 0, 0);
+}
+
+double Program::condense(double x, double y, std::string &op)
+{
+    if (op == "+")
+        return x + y;
+    else if (op == "-")
+        return x - y;
+    else if (op == "*")
+        return x * y;
+    else if (op == "/")
+        return x / y;
+    else if (op == "**")
+        return std::pow(x, y);
+    return 0;
 }
 
 /**
