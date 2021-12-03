@@ -44,9 +44,10 @@ void Program::run()
     // Insert first snapshot state
     state_snapshot.push_back(VariableSnapshot(0, 0, 0, 0));
 
-    for (Expression &expression : expressions)
+    for (size_t i = 0; i < expressions.size(); ++i)
     {
-        VariableSnapshot new_snapshot = this->eval(expression, state_snapshot.back());
+        Expression &expression = expressions[i];
+        VariableSnapshot new_snapshot = this->eval(expression, state_snapshot.back(), expressions, i);
         state_snapshot.push_back(new_snapshot);
 
         new_snapshot.print();
@@ -54,18 +55,41 @@ void Program::run()
     }
 }
 
-VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_state)
+VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_state, std::vector<Expression> &expressions, size_t expression_position)
 {
+    VariableSnapshot new_state(prev_state.w, prev_state.x, prev_state.y, prev_state.z);
+    double var_value;
+    int goto_line;
+
     switch (expression.assigner)
     {
     case '=':
-        VariableSnapshot new_state = handleAssign(expression, prev_state);
+        new_state = handleAssign(expression, prev_state);
         return new_state;
     case '?':
-        std::cout << "Loop operator" << std::endl;
+        var_value = this->getValue(expression.var, prev_state);
+        if (var_value == 0)
+        {
+            // Reset loop related member variables
+            this->loopCounter = 0;
+            return new_state;
+        }
+
+        // Otherwise append loop commands to expressions
+        goto_line = stoi(expression.arg1);
+        // copy commands to be looped
+        std::vector<Expression> loop_commands;
+        for (int i = goto_line - 1; i < expression.line_number; ++i)
+        {
+            Expression exp(&(expressions[i]));
+            loop_commands.push_back(exp);
+        }
+        // add copied commands to expressions
+        expressions.insert(expressions.begin() + expression_position + 1, loop_commands.begin(), loop_commands.end());
+        this->loopCounter++;
         break;
     }
-    return VariableSnapshot(0, 0, 0, 0);
+    return new_state;
 }
 
 /**
