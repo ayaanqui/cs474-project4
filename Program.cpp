@@ -56,39 +56,46 @@ void Program::run()
 
 VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_state)
 {
-    double arg1_value;
     switch (expression.assigner)
     {
     case '=':
-        if (expression.arg2 == "" || expression.arg3 == "")
-        {
-            // Then arg1 must be a constant value
-            double value = std::stod(expression.arg1);
-            return this->setValue(expression.var, value, prev_state);
-        }
-        // arg1 must be a var, arg3 could be a var or a constant value
-        arg1_value = this->getValue(expression.arg1[0], prev_state);
-
-        // Try to convert arg3 to double otherwise catch because it's a variable and cannot be converted
-        try
-        {
-            double arg3 = std::stod(expression.arg3);
-            double value = this->condense(arg1_value, arg3, expression.arg2);
-            return this->setValue(expression.var, value, prev_state);
-        }
-        catch (std::invalid_argument &e)
-        {
-            // arg3 must be a variable, so get the value first...
-            double arg3_value = this->getValue(expression.arg3[0], prev_state);
-            double value = this->condense(arg1_value, arg3_value, expression.arg2);
-            return this->setValue(expression.var, value, prev_state);
-        }
-        break;
+        VariableSnapshot new_state = handleAssign(expression, prev_state);
+        return new_state;
     case '?':
         std::cout << "Loop operator" << std::endl;
         break;
     }
     return VariableSnapshot(0, 0, 0, 0);
+}
+
+/**
+ * @brief Handles the '=' operator
+ */
+VariableSnapshot Program::handleAssign(Expression &expression, VariableSnapshot &state)
+{
+    if (expression.arg2 == "" || expression.arg3 == "")
+    {
+        // Then arg1 must be a constant value
+        double value = std::stod(expression.arg1);
+        return this->setValue(expression.var, value, state);
+    }
+    // arg1 must be a var, arg3 could be a var or a constant value
+    double arg1_value = this->getValue(expression.arg1[0], state);
+
+    // Try to convert arg3 to double otherwise catch because it's a variable and cannot be converted
+    try
+    {
+        double arg3 = std::stod(expression.arg3);
+        double value = this->condense(arg1_value, arg3, expression.arg2);
+        return this->setValue(expression.var, value, state);
+    }
+    catch (std::invalid_argument &e)
+    {
+    }
+    // arg3 must be a variable, so get the value first...
+    double arg3_value = this->getValue(expression.arg3[0], state);
+    double value = this->condense(arg1_value, arg3_value, expression.arg2);
+    return this->setValue(expression.var, value, state);
 }
 
 double Program::condense(double x, double y, std::string &op)

@@ -16,6 +16,7 @@ private:
     VariableSnapshot setValue(char var, double value, VariableSnapshot &state);
     double getValue(char var, VariableSnapshot &state);
     double condense(double x, double y, std::string &op);
+    VariableSnapshot handleAssign(Expression &expression, VariableSnapshot &state);
 
 public:
     void startProgram();
