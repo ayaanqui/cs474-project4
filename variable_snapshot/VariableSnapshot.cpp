@@ -1,11 +1,6 @@
 #include <iostream>
 #include "VariableSnapshot.h"
 
-VariableSnapshot::VariableSnapshot()
-{
-    w, x, y, z = 0;
-}
-
 VariableSnapshot::VariableSnapshot(int w, int x, int y, int z)
 {
     this->w = w;
