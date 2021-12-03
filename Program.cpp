@@ -16,6 +16,9 @@ void Program::startProgram()
 {
     while (true)
     {
+        this->stopLoop = false;
+        this->loopCounter = 0;
+
         std::string input;
         std::cout << "> ";
         std::getline(std::cin, input);
@@ -55,6 +58,7 @@ void Program::run()
         VariableSnapshot new_snapshot = this->eval(expression, state_snapshot.back(), expressions, i);
         state_snapshot.push_back(new_snapshot);
 
+        std::cout << expression.expression << std::endl;
         new_snapshot.print();
         std::cout << std::endl;
     }
@@ -110,11 +114,19 @@ VariableSnapshot Program::handleLoop(Expression &expression, VariableSnapshot &s
     VariableSnapshot new_state(state.w, state.x, state.y, state.z);
 
     // stop execution after 100 iterations
-    if (this->loopCounter == 100)
+    if (this->loopCounter >= 100)
     {
-        std::cout << loopCounter << std::endl;
-        this->stopLoop = true;
-        return new_state;
+        std::string res;
+        std::cout << "Do you want to keep the loop going? (y/n) ";
+        std::getline(std::cin, res);
+
+        if (res[0] == 'y')
+            this->loopCounter = 0;
+        else
+        {
+            this->stopLoop = true;
+            return new_state;
+        }
     }
 
     double var_value = this->getValue(expression.var, state);
