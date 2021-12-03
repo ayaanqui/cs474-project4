@@ -49,6 +49,19 @@ void Program::run()
     }
 }
 
+VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_state)
+{
+    switch (expression.assigner)
+    {
+    case '=':
+        std::cout << "Assignment operator" << std::endl;
+        break;
+    case '?':
+        std::cout << "Loop operator" << std::endl;
+        break;
+    }
+}
+
 /**
  * @brief Loads and parses the data from 'pc_input.txt' file into a vector of Expression
  * 

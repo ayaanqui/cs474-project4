@@ -2,6 +2,7 @@
 #include <string>
 #include "Instruction.h"
 #include "expression/Expression.h"
+#include "variable_snapshot/VariableSnapshot.h"
 
 class Program : Instruction
 {
