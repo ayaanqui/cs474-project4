@@ -30,7 +30,8 @@ void Program::startProgram()
             this->run();
             break;
         case 's':
-            std::cout << "Step by step program execution" << std::endl;
+            this->step();
+            break;
         case 'x':
             return;
         default:
@@ -43,7 +44,7 @@ void Program::startProgram()
 }
 
 /**
- * @brief Mehtod for the 'r' command. Runs the entire program all at once. Prints the state after each line is executed.
+ * @brief Method for the 'r' command. Runs the entire program all at once. Prints the state after each line is executed.
  */
 void Program::run()
 {
@@ -61,6 +62,36 @@ void Program::run()
         std::cout << expression.expression << std::endl;
         new_snapshot.print();
         std::cout << std::endl;
+    }
+}
+
+/**
+ * @brief Method for the 's' command. Runs the program step-by-step.
+ */
+void Program::step()
+{
+    std::vector<Expression> expressions = loadData();
+    std::vector<VariableSnapshot> state_snapshot;
+    // Insert first snapshot state
+    state_snapshot.push_back(VariableSnapshot(0, 0, 0, 0));
+
+    for (size_t i = 0; i < expressions.size(); ++i)
+    {
+        Expression &expression = expressions[i];
+        VariableSnapshot new_snapshot = this->eval(expression, state_snapshot.back(), expressions, i);
+        state_snapshot.push_back(new_snapshot);
+
+        std::cout << expression.expression << std::endl;
+        new_snapshot.print();
+        std::cout << std::endl;
+
+        // Ask user to continue
+        std::cout << "> ";
+        std::string res;
+        std::getline(std::cin, res);
+
+        if (res[0] != 's')
+            return;
     }
 }
 
