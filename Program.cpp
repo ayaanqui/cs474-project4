@@ -56,10 +56,10 @@ void Program::run()
     for (size_t i = 0; i < expressions.size(); ++i)
     {
         Expression &expression = expressions[i];
+        std::cout << expression.expression << std::endl;
+
         VariableSnapshot new_snapshot = this->eval(expression, state_snapshot.back(), expressions, i);
         state_snapshot.push_back(new_snapshot);
-
-        std::cout << expression.expression << std::endl;
         new_snapshot.print();
         std::cout << std::endl;
     }
@@ -78,10 +78,10 @@ void Program::step()
     for (size_t i = 0; i < expressions.size(); ++i)
     {
         Expression &expression = expressions[i];
+        std::cout << expression.expression << std::endl;
+
         VariableSnapshot new_snapshot = this->eval(expression, state_snapshot.back(), expressions, i);
         state_snapshot.push_back(new_snapshot);
-
-        std::cout << expression.expression << std::endl;
         new_snapshot.print();
         std::cout << std::endl;
 
