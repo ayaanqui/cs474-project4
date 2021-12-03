@@ -29,22 +29,28 @@ std::vector<std::string> file_contents()
     return data;
 }
 
-std::vector<std::string> *parse_args(std::string args)
+/**
+ * @brief Given a string separates the args by space
+ * 
+ * @param args 
+ * @return std::vector<std::string>
+ */
+std::vector<std::string> parse_args(std::string args)
 {
-    std::vector<std::string> *res = new std::vector<std::string>();
+    std::vector<std::string> res;
     size_t i = 0;
     while (i < args.size())
     {
         if (args[i] == ' ')
         {
-            res->push_back(args.substr(0, i));
+            res.push_back(args.substr(0, i));
             args = args.substr(i + 1);
             i = 0;
             continue;
         }
         i++;
     }
-    res->push_back(args);
+    res.push_back(args);
     return res;
 }
 
@@ -71,8 +77,8 @@ Expression parse_line(const std::string raw_line)
     if (line.at(line.size() - 1) == '.')
         line = line.substr(0, line.size() - 1);
 
-    std::vector<std::string> *args = parse_args(line);
-    Expression expression(raw_line, line_number, var, op, args);
+    std::vector<std::string> args = parse_args(line);
+    Expression expression(raw_line, line_number, var, op, &args);
     return expression;
 }
 
