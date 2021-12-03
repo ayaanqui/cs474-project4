@@ -6,6 +6,12 @@
 #include "variable_snapshot/VariableSnapshot.h"
 #include "Program.h"
 
+Program::Program()
+{
+    this->stopLoop = false;
+    this->loopCounter = 0;
+}
+
 void Program::startProgram()
 {
     while (true)
@@ -102,10 +108,20 @@ VariableSnapshot Program::handleAssign(Expression &expression, VariableSnapshot 
 VariableSnapshot Program::handleLoop(Expression &expression, VariableSnapshot &state, std::vector<Expression> &expressions, size_t expression_position)
 {
     VariableSnapshot new_state(state.w, state.x, state.y, state.z);
+
+    // stop execution after 100 iterations
+    if (this->loopCounter == 100)
+    {
+        std::cout << loopCounter << std::endl;
+        this->stopLoop = true;
+        return new_state;
+    }
+
     double var_value = this->getValue(expression.var, state);
     if (var_value == 0)
     {
         // Reset loop related member variables
+        this->stopLoop = false;
         this->loopCounter = 0;
         return new_state;
     }

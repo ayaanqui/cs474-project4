@@ -8,6 +8,7 @@ class Program : Instruction
 {
 private:
     int loopCounter;
+    bool stopLoop;
 
     std::vector<Expression> loadData();
     void run();
@@ -16,5 +17,6 @@ private:
     VariableSnapshot handleLoop(Expression &expression, VariableSnapshot &state, std::vector<Expression> &expressions, size_t expression_position);
 
 public:
+    Program();
     void startProgram();
 };
