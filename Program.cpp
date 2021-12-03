@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <exception>
-#include <cmath>
 #include "expression/Expression.h"
 #include "variable_snapshot/VariableSnapshot.h"
 #include "Program.h"
@@ -120,68 +119,6 @@ VariableSnapshot Program::handleAssign(Expression &expression, VariableSnapshot 
     double arg3_value = this->getValue(expression.arg3[0], state);
     double value = this->condense(arg1_value, arg3_value, expression.arg2);
     return this->setValue(expression.var, value, state);
-}
-
-double Program::condense(double x, double y, std::string &op)
-{
-    if (op == "+")
-        return x + y;
-    else if (op == "-")
-        return x - y;
-    else if (op == "*")
-        return x * y;
-    else if (op == "/")
-        return x / y;
-    else if (op == "**")
-        return std::pow(x, y);
-    return 0;
-}
-
-/**
- * @brief Creates a VariableSnapshot object with the new value for the specified variable (w, x, y or z) writing the older values for the rest of the variables.
- * 
- * @param var Variable that needs to be assigned a new value
- * @param value Value that needs to be stored
- * @param state
- * @return VariableSnapshot 
- */
-VariableSnapshot Program::setValue(char var, double value, VariableSnapshot &state)
-{
-    switch (var)
-    {
-    case 'w':
-        return VariableSnapshot(value, state.x, state.y, state.z);
-    case 'x':
-        return VariableSnapshot(state.w, value, state.y, state.z);
-    case 'y':
-        return VariableSnapshot(state.w, state.x, value, state.z);
-    case 'z':
-        return VariableSnapshot(state.w, state.x, state.y, value);
-    }
-    return VariableSnapshot(0, 0, 0, 0);
-}
-
-/**
- * @brief Given a variable name return the value that it holds
- * 
- * @param var Variable name
- * @param state
- * @return double 
- */
-double Program::getValue(char var, VariableSnapshot &state)
-{
-    switch (var)
-    {
-    case 'w':
-        return state.w;
-    case 'x':
-        return state.x;
-    case 'y':
-        return state.y;
-    case 'z':
-        return state.z;
-    }
-    return 0;
 }
 
 /**
