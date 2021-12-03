@@ -3,11 +3,11 @@
 class VariableSnapshot
 {
 public:
-    int w;
-    int x;
-    int y;
-    int z;
+    double w;
+    double x;
+    double y;
+    double z;
 
-    VariableSnapshot(int w, int x, int y, int z);
+    VariableSnapshot(double w, double x, double y, double z);
     void print();
 };

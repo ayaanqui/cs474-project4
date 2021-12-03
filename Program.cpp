@@ -70,20 +70,36 @@ VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_st
  * @param prev_state The latest state
  * @return VariableSnapshot 
  */
-VariableSnapshot Program::setValue(char var, double value, VariableSnapshot &prev_state)
+VariableSnapshot Program::setValue(char var, double value, VariableSnapshot &state)
 {
     switch (var)
     {
     case 'w':
-        return VariableSnapshot(value, prev_state.x, prev_state.y, prev_state.z);
+        return VariableSnapshot(value, state.x, state.y, state.z);
     case 'x':
-        return VariableSnapshot(prev_state.w, value, prev_state.y, prev_state.z);
+        return VariableSnapshot(state.w, value, state.y, state.z);
     case 'y':
-        return VariableSnapshot(prev_state.w, prev_state.x, value, prev_state.z);
+        return VariableSnapshot(state.w, state.x, value, state.z);
     case 'z':
-        return VariableSnapshot(prev_state.w, prev_state.x, prev_state.y, value);
+        return VariableSnapshot(state.w, state.x, state.y, value);
     }
     return VariableSnapshot(0, 0, 0, 0);
+}
+
+double Program::getValue(char var, VariableSnapshot &state)
+{
+    switch (var)
+    {
+    case 'w':
+        return state.w;
+    case 'x':
+        return state.x;
+    case 'y':
+        return state.y;
+    case 'z':
+        return state.z;
+    }
+    return 0;
 }
 
 /**

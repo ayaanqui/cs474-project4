@@ -13,8 +13,8 @@ private:
     std::vector<Expression> loadData();
     void run();
     VariableSnapshot eval(Expression &expression, VariableSnapshot &prev_strate);
-    VariableSnapshot setValue(char var, double value, VariableSnapshot &prev_state);
-    double getValue(char var, VariableSnapshot &cur_state);
+    VariableSnapshot setValue(char var, double value, VariableSnapshot &state);
+    double getValue(char var, VariableSnapshot &state);
 
 public:
     void startProgram();
