@@ -67,7 +67,7 @@ VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_st
  * 
  * @param var Variable that needs to be assigned a new value
  * @param value Value that needs to be stored
- * @param prev_state The latest state
+ * @param state
  * @return VariableSnapshot 
  */
 VariableSnapshot Program::setValue(char var, double value, VariableSnapshot &state)
@@ -86,6 +86,13 @@ VariableSnapshot Program::setValue(char var, double value, VariableSnapshot &sta
     return VariableSnapshot(0, 0, 0, 0);
 }
 
+/**
+ * @brief Given a variable name return the value that it holds
+ * 
+ * @param var Variable name
+ * @param state
+ * @return double 
+ */
 double Program::getValue(char var, VariableSnapshot &state)
 {
     switch (var)
