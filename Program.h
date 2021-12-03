@@ -15,6 +15,7 @@ private:
     VariableSnapshot eval(Expression &expression, VariableSnapshot &prev_strate);
     VariableSnapshot setValue(char var, double value, VariableSnapshot &state);
     double getValue(char var, VariableSnapshot &state);
+    double condense(double x, double y, char op);
 
 public:
     void startProgram();
