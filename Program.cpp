@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "expression/Expression.h"
+#include "variable_snapshot/VariableSnapshot.h"
 #include "Program.h"
 
 void Program::startProgram()
@@ -16,7 +17,7 @@ void Program::startProgram()
         switch (input_command)
         {
         case 'r':
-            std::cout << "Run the entire program" << std::endl;
+            this->run();
             break;
         case 's':
             std::cout << "Step by step program execution" << std::endl;
@@ -26,12 +27,33 @@ void Program::startProgram()
             std::cout << "Unknown command" << std::endl;
             break;
         }
-
         // Blank line...
         std::cout << std::endl;
     }
 }
 
+/**
+ * @brief Mehtod for the 'r' command. Runs the entire program all at once. Prints the state after each line is executed.
+ */
+void Program::run()
+{
+    std::vector<Expression> expressions = loadData();
+    std::vector<VariableSnapshot> state_snapshot;
+    // Insert first snapshot state
+    state_snapshot.push_back(VariableSnapshot(0, 0, 0, 0));
+
+    for (Expression &expression : expressions)
+    {
+        VariableSnapshot new_snapshot = this->eval(expression, state_snapshot.back());
+        state_snapshot.push_back(new_snapshot);
+    }
+}
+
+/**
+ * @brief Loads and parses the data from 'pc_input.txt' file into a vector of Expression
+ * 
+ * @return std::vector<Expression> 
+ */
 std::vector<Expression> Program::loadData()
 {
     std::vector<std::string> file_data = this->getFileData("pc_input.txt");

@@ -10,6 +10,8 @@ private:
     bool stopLoop;
 
     std::vector<Expression> loadData();
+    void run();
+    VariableSnapshot eval(Expression &expression, VariableSnapshot &prev_strate);
 
 public:
     void startProgram();
