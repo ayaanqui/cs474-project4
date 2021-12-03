@@ -17,8 +17,6 @@ Expression::Expression(const std::string expression, const std::string line_numb
         this->arg2 = args->at(1);
         this->arg3 = args->at(2);
     }
-
-    std::cout << "Constructor called" << std::endl;
 }
 
 void Expression::print()
