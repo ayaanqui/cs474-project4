@@ -1,7 +1,7 @@
 #include <iostream>
 #include "VariableSnapshot.h"
 
-VariableSnapshot::VariableSnapshot(double w, double x, double y, double z)
+VariableSnapshot::VariableSnapshot(int w, int x, int y, int z)
 {
     this->w = w;
     this->x = x;

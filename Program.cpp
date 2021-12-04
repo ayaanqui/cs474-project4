@@ -118,25 +118,25 @@ VariableSnapshot Program::handleAssign(Expression &expression, VariableSnapshot 
     if (expression.arg2 == "" || expression.arg3 == "")
     {
         // Then arg1 must be a constant value
-        double value = std::stod(expression.arg1);
+        int value = std::stoi(expression.arg1);
         return this->setValue(expression.var, value, state);
     }
     // arg1 must be a var, arg3 could be a var or a constant value
-    double arg1_value = this->getValue(expression.arg1[0], state);
+    int arg1_value = this->getValue(expression.arg1[0], state);
 
-    // Try to convert arg3 to double otherwise catch because it's a variable and cannot be converted
+    // Try to convert arg3 to int otherwise catch because it's a variable and cannot be converted
     try
     {
-        double arg3 = std::stod(expression.arg3);
-        double value = this->condense(arg1_value, arg3, expression.arg2);
+        int arg3 = std::stoi(expression.arg3);
+        int value = this->condense(arg1_value, arg3, expression.arg2);
         return this->setValue(expression.var, value, state);
     }
     catch (std::invalid_argument &e)
     {
     }
     // arg3 must be a variable, so get the value first...
-    double arg3_value = this->getValue(expression.arg3[0], state);
-    double value = this->condense(arg1_value, arg3_value, expression.arg2);
+    int arg3_value = this->getValue(expression.arg3[0], state);
+    int value = this->condense(arg1_value, arg3_value, expression.arg2);
     return this->setValue(expression.var, value, state);
 }
 
@@ -160,7 +160,7 @@ VariableSnapshot Program::handleLoop(Expression &expression, VariableSnapshot &s
         }
     }
 
-    double var_value = this->getValue(expression.var, state);
+    int var_value = this->getValue(expression.var, state);
     if (var_value == 0)
     {
         // Reset loop related member variables
