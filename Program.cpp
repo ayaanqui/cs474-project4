@@ -95,6 +95,22 @@ VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_st
         new_state = handleAssign(expression, prev_state);
         return new_state;
     case '?':
+        // stop execution after 100 iterations
+        if (this->loopCounter >= 100)
+        {
+            std::string res;
+            std::cout << "Do you want to keep the loop going? (y/n) ";
+            std::getline(std::cin, res);
+
+            if (res[0] == 'y')
+                this->loopCounter = 0;
+            else
+            {
+                this->stopLoop = true;
+                this->loopCounter = 0;
+                return new_state;
+            }
+        }
         new_state = handleLoop(expression, prev_state, expressions, expression_position);
         return new_state;
     }
@@ -134,31 +150,9 @@ VariableSnapshot Program::handleAssign(Expression &expression, VariableSnapshot 
 VariableSnapshot Program::handleLoop(Expression &expression, VariableSnapshot &state, std::vector<Expression> &expressions, size_t expression_position)
 {
     VariableSnapshot new_state(state.w, state.x, state.y, state.z);
-
-    // stop execution after 100 iterations
-    if (this->loopCounter >= 100)
-    {
-        std::string res;
-        std::cout << "Do you want to keep the loop going? (y/n) ";
-        std::getline(std::cin, res);
-
-        if (res[0] == 'y')
-            this->loopCounter = 0;
-        else
-        {
-            this->stopLoop = true;
-            return new_state;
-        }
-    }
-
     int var_value = this->getValue(expression.var, state);
     if (var_value == 0)
-    {
-        // Reset loop related member variables
-        this->stopLoop = false;
-        this->loopCounter = 0;
         return new_state;
-    }
 
     // Otherwise append loop commands to expressions
     int goto_line = std::stoi(expression.arg1);
