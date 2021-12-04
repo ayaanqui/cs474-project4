@@ -8,7 +8,6 @@
 
 Program::Program()
 {
-    this->program_data = new std::vector<Expression>();
     this->stopLoop = false;
     this->loopCounter = 0;
 }
@@ -178,4 +177,9 @@ std::vector<Expression> *Program::loadData()
     for (std::string &line : file_data)
         parsed_data->push_back(this->parseLine(line));
     return parsed_data;
+}
+
+Program::~Program()
+{
+    this->destroy();
 }

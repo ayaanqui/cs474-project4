@@ -20,4 +20,6 @@ private:
 public:
     Program();
     void startProgram();
+
+    ~Program();
 };

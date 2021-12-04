@@ -13,4 +13,10 @@ public:
     VariableSnapshot setValue(char var, double value, VariableSnapshot &state);
     double getValue(char var, VariableSnapshot &state);
     double condense(double x, double y, std::string &op);
+
+    virtual void destroy()
+    {
+        program_data->clear();
+        delete program_data;
+    }
 };
