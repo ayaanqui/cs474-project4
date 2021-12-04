@@ -11,7 +11,7 @@ private:
     bool stopLoop;
 
     std::vector<Expression> *loadData();
-    void run();
+    void run(bool step);
     void step();
     VariableSnapshot eval(Expression &expression, VariableSnapshot &prev_state, std::vector<Expression> &expressions, size_t expression_position);
     VariableSnapshot handleAssign(Expression &expression, VariableSnapshot &state);

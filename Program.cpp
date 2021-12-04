@@ -28,7 +28,7 @@ void Program::startProgram()
         switch (input_command)
         {
         case 'r':
-            this->run();
+            this->run(false);
             break;
         case 's':
             this->step();
@@ -47,7 +47,7 @@ void Program::startProgram()
 /**
  * @brief Method for the 'r' command. Runs the entire program all at once. Prints the state after each line is executed.
  */
-void Program::run()
+void Program::run(bool step)
 {
     this->program_data = loadData();
     std::vector<Expression> expressions(*(this->program_data));
@@ -64,6 +64,17 @@ void Program::run()
         state_snapshot.push_back(new_snapshot);
         new_snapshot.print();
         std::cout << std::endl;
+
+        if (step)
+        {
+            // Ask user to continue
+            std::cout << "> ";
+            std::string res;
+            std::getline(std::cin, res);
+
+            if (res[0] != 's')
+                return;
+        }
     }
 }
 
@@ -72,30 +83,7 @@ void Program::run()
  */
 void Program::step()
 {
-    this->program_data = loadData();
-    std::vector<Expression> expressions(*(this->program_data));
-    std::vector<VariableSnapshot> state_snapshot;
-    // Insert first snapshot state
-    state_snapshot.push_back(VariableSnapshot(0, 0, 0, 0));
-
-    for (size_t i = 0; i < expressions.size(); ++i)
-    {
-        Expression &expression = expressions[i];
-        std::cout << expression.expression << std::endl;
-
-        VariableSnapshot new_snapshot = this->eval(expression, state_snapshot.back(), expressions, i);
-        state_snapshot.push_back(new_snapshot);
-        new_snapshot.print();
-        std::cout << std::endl;
-
-        // Ask user to continue
-        std::cout << "> ";
-        std::string res;
-        std::getline(std::cin, res);
-
-        if (res[0] != 's')
-            return;
-    }
+    this->run(true);
 }
 
 VariableSnapshot Program::eval(Expression &expression, VariableSnapshot &prev_state, std::vector<Expression> &expressions, size_t expression_position)
@@ -173,7 +161,7 @@ VariableSnapshot Program::handleLoop(Expression &expression, VariableSnapshot &s
     }
 
     // Otherwise append loop commands to expressions
-    int goto_line = stoi(expression.arg1);
+    int goto_line = std::stoi(expression.arg1);
     // copy commands to be looped
     std::vector<Expression> loop_commands;
     for (int i = goto_line - 1; i < expression.line_number; ++i)
