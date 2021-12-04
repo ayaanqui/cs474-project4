@@ -10,7 +10,7 @@ private:
     int loopCounter;
     bool stopLoop;
 
-    std::vector<Expression> loadData();
+    std::vector<Expression> *loadData();
     void run();
     void step();
     VariableSnapshot eval(Expression &expression, VariableSnapshot &prev_state, std::vector<Expression> &expressions, size_t expression_position);

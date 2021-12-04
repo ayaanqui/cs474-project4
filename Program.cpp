@@ -8,6 +8,7 @@
 
 Program::Program()
 {
+    this->program_data = new std::vector<Expression>();
     this->stopLoop = false;
     this->loopCounter = 0;
 }
@@ -48,7 +49,8 @@ void Program::startProgram()
  */
 void Program::run()
 {
-    std::vector<Expression> expressions = loadData();
+    this->program_data = loadData();
+    std::vector<Expression> expressions(*(this->program_data));
     std::vector<VariableSnapshot> state_snapshot;
     // Insert first snapshot state
     state_snapshot.push_back(VariableSnapshot(0, 0, 0, 0));
@@ -70,7 +72,8 @@ void Program::run()
  */
 void Program::step()
 {
-    std::vector<Expression> expressions = loadData();
+    this->program_data = loadData();
+    std::vector<Expression> expressions(*(this->program_data));
     std::vector<VariableSnapshot> state_snapshot;
     // Insert first snapshot state
     state_snapshot.push_back(VariableSnapshot(0, 0, 0, 0));
@@ -174,10 +177,7 @@ VariableSnapshot Program::handleLoop(Expression &expression, VariableSnapshot &s
     // copy commands to be looped
     std::vector<Expression> loop_commands;
     for (int i = goto_line - 1; i < expression.line_number; ++i)
-    {
-        Expression exp(&(expressions[i]));
-        loop_commands.push_back(exp);
-    }
+        loop_commands.push_back(this->program_data->at(i));
     // add copied commands to expressions
     expressions.insert(expressions.begin() + expression_position + 1, loop_commands.begin(), loop_commands.end());
     this->loopCounter++;
@@ -187,13 +187,13 @@ VariableSnapshot Program::handleLoop(Expression &expression, VariableSnapshot &s
 /**
  * @brief Loads and parses the data from 'pc_input.txt' file into a vector of Expression
  * 
- * @return std::vector<Expression> 
+ * @return *std::vector<Expression> 
  */
-std::vector<Expression> Program::loadData()
+std::vector<Expression> *Program::loadData()
 {
     std::vector<std::string> file_data = this->getFileData("pc_input.txt");
-    std::vector<Expression> parsed_data;
+    std::vector<Expression> *parsed_data = new std::vector<Expression>();
     for (std::string &line : file_data)
-        parsed_data.push_back(this->parseLine(line));
+        parsed_data->push_back(this->parseLine(line));
     return parsed_data;
 }
